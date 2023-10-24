@@ -1,32 +1,40 @@
-package com.neoris.inditex.pricesdb.service;
+package com.neoris.inditex.pricesdb.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.dao.TransientDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import com.markes96.dto.api.ApiRequestDataDTO;
 import com.markes96.mktest.template.AbstractMkTestTemplate;
 import com.markes96.mktest.template.annotation.MkTestTemplate;
 import com.markes96.mktest.template.annotation.MkTestTemplateConfiguration;
 import com.markes96.mktest.template.enumeration.TestType;
 import com.neoris.inditex.pricesdb.dto.api.PricesDBApiRequestDataDTO;
-import com.neoris.inditex.pricesdb.dto.database.RateDTO;
 import com.neoris.inditex.pricesdb.exception.RateNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @SpringBootTest
 @MkTestTemplateConfiguration(path = "templates/pricesdbqueries", testType = TestType.LOAD_FILE,
     exampleName = "query.json")
-public class PricesDBServiceTest extends AbstractMkTestTemplate {
+public class PricesDBControllerTest extends AbstractMkTestTemplate {
 
   @Autowired
-  PricesDBService service;
+  PricesDBController controller;
 
   @MkTestTemplate
-  RateDTO exampleTest(final PricesDBApiRequestDataDTO data)
+  ApiRequestDataDTO exampleTest(final PricesDBApiRequestDataDTO data)
       throws QueryTimeoutException, TransientDataAccessException, DataAccessException,
       EntityNotFoundException, RateNotFoundException {
-    return this.service.getOperatingProductRate(data);
+
+    final ResponseEntity<ApiRequestDataDTO> response =
+        this.controller.getOperatingProductRate(data);
+
+    Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    return response.getBody();
   }
 
 }

@@ -8,8 +8,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.stereotype.Service;
-import com.neoris.inditex.pricesdb.constant.PricesDBServiceConstant;
-import com.neoris.inditex.pricesdb.dto.api.PricesDBAPIRequestDataDTO;
+import com.neoris.inditex.pricesdb.constant.ErrorConstant;
+import com.neoris.inditex.pricesdb.dto.api.PricesDBApiRequestDataDTO;
 import com.neoris.inditex.pricesdb.dto.database.RateDTO;
 import com.neoris.inditex.pricesdb.exception.RateNotFoundException;
 import com.neoris.inditex.pricesdb.repository.PricesRepository;
@@ -24,7 +24,7 @@ public class PricesDBServiceImpl implements PricesDBService {
   private PricesRepository pricesRepository;
 
   @Override
-  public RateDTO getOperatingProductRate(final PricesDBAPIRequestDataDTO data)
+  public RateDTO getOperatingProductRate(final PricesDBApiRequestDataDTO data)
       throws RateNotFoundException, DataAccessException, TransientDataAccessException,
       QueryTimeoutException, EntityNotFoundException {
 
@@ -41,8 +41,8 @@ public class PricesDBServiceImpl implements PricesDBService {
     if (rateOnDateRange.isPresent()) {
       return rateOnDateRange.get();
     }
-    throw new RateNotFoundException(PricesDBServiceConstant.RATE_NOT_FOUND_ERROR,
-        PricesDBServiceConstant.RATE_NOT_FOUND_MESSAGE.apply(data));
+    throw new RateNotFoundException(ErrorConstant.RATE_NOT_FOUND_ERROR,
+        ErrorConstant.RATE_NOT_FOUND_MESSAGE.apply(data));
   }
 
 }
